@@ -9,7 +9,7 @@ import './styles.css';
 const pages=['submit','admin','stage'];
 function route(){ const p=location.hash.slice(1).split('?')[0]; return pages.includes(p)?p:'submit'; }
 function App(){ const [page,setPage]=useState(route()); useEffect(()=>{ const f=()=>setPage(route()); addEventListener('hashchange',f); return()=>removeEventListener('hashchange',f)},[]); return <>{page==='submit'?<Submit/>:page==='admin'?<Admin/>:<Stage/>}</> }
-function Brand({dark=false}){return <a className={'brand '+(dark?'brand-dark':'')} href="#submit"><span className="brand-mark"><b>강남</b><i>GANGNAM</i></span><span>강남구청<small>GANGNAM-GU OFFICE</small></span></a>}
+function Brand({dark=false}){return <a className={'brand '+(dark?'brand-dark':'')} href="#submit"><img className="brand-logo" src="https://www.gangnam.go.kr/assets/portal/image/202404/img_main_logo_2026.png" alt="강남구 GANGNAMGU"/></a>}
 function Submit(){
  const [form,setForm]=useState({text:'',department:'',position:'',name:'',disclosure:'ANONYMOUS'}),[busy,setBusy]=useState(false),[done,setDone]=useState(null),[error,setError]=useState('');
  const set=(k,v)=>setForm(f=>({...f,[k]:v}));

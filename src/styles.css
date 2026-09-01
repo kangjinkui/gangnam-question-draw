@@ -6,3 +6,5 @@
 @media(max-width:420px){.topbar{padding:0 16px}.topbar .brand>span:last-child{font-size:14px}.topbar .brand small{font-size:7px}.submit-wrap{padding:0 20px}.slogan-wrap img{width:190px}.prompt-chips{gap:7px}.prompt-chips span{padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .slogan-wrap>span{text-orientation:upright}
+.brand-logo{display:block;width:145px;height:auto}.brand-dark .brand-logo{filter:grayscale(1) brightness(0) invert(1)}
+@media(max-width:420px){.brand-logo{width:128px}}
