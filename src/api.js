@@ -1,6 +1,6 @@
 const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL?.trim();
 
-export async function submitQuestion(payload) {
+async function callAppsScript(action, payload = {}) {
   if (!APPS_SCRIPT_URL) {
     throw new Error('VITE_APPS_SCRIPT_URL 환경변수가 설정되지 않았습니다.');
   }
@@ -8,7 +8,7 @@ export async function submitQuestion(payload) {
   const response = await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'submit', payload })
+    body: JSON.stringify({ action, payload })
   });
 
   if (!response.ok) {
@@ -23,4 +23,28 @@ export async function submitQuestion(payload) {
   const result = await response.json();
   if (!result.ok) throw new Error(result.error || '질문 접수에 실패했습니다.');
   return result.data;
+}
+
+export function submitQuestion(payload) {
+  return callAppsScript('submit', payload);
+}
+
+export function listQuestions(operatorPin) {
+  return callAppsScript('list', { operatorPin });
+}
+
+export function moderateQuestion(operatorPin, id, status) {
+  return callAppsScript('moderate', { operatorPin, id, status });
+}
+
+export function drawQuestion(operatorPin) {
+  return callAppsScript('draw', { operatorPin, effect: 'DICE' });
+}
+
+export function finishQuestion(operatorPin, id, status) {
+  return callAppsScript('finish', { operatorPin, id, status });
+}
+
+export function seedTestQuestions(operatorPin, count = 100) {
+  return callAppsScript('seedTest', { operatorPin, count });
 }
