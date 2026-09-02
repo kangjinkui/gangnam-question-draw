@@ -117,8 +117,14 @@ async function handle(action,payload,sql) {
   }
   if(action==='deleteQuestion') {
     const id=numericId(payload.id);
-    const rows=await sql`DELETE FROM questions WHERE id=${id} AND draw_order IS NULL RETURNING id,text`;
-    if(!rows.length) throw new Error('질문을 찾을 수 없거나 이미 추첨되어 삭제할 수 없습니다.');
+    const rows=await sql`WITH cleared AS (
+      UPDATE event_state SET screen_state='IDLE',current_question_id=NULL,reveal_at=NULL,updated_at=now()
+      WHERE singleton=TRUE AND current_question_id=${id} RETURNING singleton
+    )
+    DELETE FROM questions WHERE id=${id}
+      AND (NOT EXISTS (SELECT 1 FROM event_state WHERE current_question_id=${id}) OR EXISTS (SELECT 1 FROM cleared))
+      RETURNING id,text`;
+    if(!rows.length) throw new Error('삭제할 질문을 찾을 수 없습니다.');
     await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('DELETE',${id},${JSON.stringify({text:rows[0].text})}::jsonb)`;
     return {id:payload.id};
   }
