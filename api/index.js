@@ -58,7 +58,7 @@ function author(row) {
 async function handle(action,payload,sql) {
   if(action==='submit') {
     const text=String(payload.text||'').trim();
-    if(text.length<10||text.length>500) throw new Error('질문은 10자 이상 500자 이하로 입력해 주세요.');
+    if(text.length<10||text.length>100) throw new Error('질문은 10자 이상 100자 이하로 입력해 주세요.');
     if(!DISCLOSURES.includes(payload.disclosure)) throw new Error('공개 범위가 올바르지 않습니다.');
     const rows=await sql`INSERT INTO questions(text,display_text,department,position,name,disclosure) VALUES
       (${text},${text},${String(payload.department||'').slice(0,100)},${String(payload.position||'').slice(0,100)},${String(payload.name||'').slice(0,100)},${payload.disclosure}) RETURNING id`;

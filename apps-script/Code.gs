@@ -28,7 +28,7 @@ function setupSpreadsheet() {
 
 function submitQuestion(p) {
   const text=String(p.text||'').trim();
-  if(text.length<10||text.length>500) throw new Error('질문은 10~500자로 입력해 주세요.');
+  if(text.length<10||text.length>100) throw new Error('질문은 10~100자로 입력해 주세요.');
   if(!['ANONYMOUS','DEPARTMENT','FULL'].includes(p.disclosure)) throw new Error('공개 범위를 선택해 주세요.');
   const sh=sheet_(SHEETS.QUESTIONS), id='Q-'+String(Math.max(0,sh.getLastRow()-1)+1).padStart(6,'0');
   sh.appendRow([id,new Date(),text,text,p.department||'',p.position||'',p.name||'',p.disclosure,'SUBMITTED','','','', '', '', 'PENDING']);

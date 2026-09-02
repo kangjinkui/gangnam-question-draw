@@ -4,7 +4,7 @@ export const DISCLOSURES = { ANONYMOUS:'익명', DEPARTMENT:'부서 공개', FUL
 export function validateQuestion(value) {
   const text = String(value || '').trim();
   if (text.length < 10) return '질문을 10자 이상 입력해 주세요.';
-  if (text.length > 500) return '질문은 500자까지 입력할 수 있어요.';
+  if (text.length > 100) return '질문은 100자까지 입력할 수 있어요.';
   return '';
 }
 
