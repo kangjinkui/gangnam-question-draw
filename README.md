@@ -4,27 +4,32 @@
 
 ## 화면
 
-- `/#submit` 직원용 모바일 질문 접수
-- `/#admin` 운영자 질문 검토 및 상태 관리
-- `/#stage` 16:9 행사 추첨 화면
+- `/#submit`: 직원 모바일 질문 접수
+- `/#admin`: 운영자 질문 검토 및 상태 관리
+- `/#stage`: 추첨 조작 및 행사 송출 화면
 
-현재 Vercel 배포본은 브라우저 `localStorage` 기반의 완전한 데모입니다. 운영 데이터는 [`apps-script/Code.gs`](apps-script/Code.gs)를 Google 스프레드시트에 연결해 사용할 수 있습니다. 운영자 인증과 역할 검사는 Apps Script 서버에서 수행하도록 구현되어 있습니다.
+데이터는 Neon PostgreSQL에 저장됩니다. 행사 화면 상태도 DB에서 공유하므로 여러 컴퓨터에서 `/#stage`를 열면 추첨 애니메이션과 공개 질문이 자동으로 동기화됩니다. 운영자 PIN이 저장된 컴퓨터에만 추첨 및 완료 버튼이 보이며, 송출용 컴퓨터는 PIN 없이 화면만 표시할 수 있습니다.
 
-## 개발
+## 로컬 개발
 
 ```bash
 npm install
-npm run dev
-npm test
-npm run build
+copy .env.example .env.local
+vercel dev
 ```
 
-## Apps Script 운영 연결
+## Vercel + Neon 설정
 
-1. 빈 Google 스프레드시트에서 Apps Script 프로젝트를 엽니다.
-2. `apps-script/Code.gs`, `appsscript.json`을 복사합니다.
-3. `setupSpreadsheet()`를 한 번 실행합니다.
-4. `운영자` 시트에 이메일, 역할(`REVIEWER`, `DRAW_OPERATOR`, `ADMIN`), `TRUE`를 입력합니다.
-5. 웹 앱으로 배포합니다. 접수는 공개 가능하지만 운영 API는 로그인 이메일과 역할을 서버에서 검증합니다.
+Vercel 프로젝트의 Environment Variables에 다음 값을 설정합니다.
 
-> 실제 운영 전 개인정보 보유기간, 검토 기준, 허용 계정 및 Google Workspace의 `Session.getActiveUser()` 정책을 담당자와 확인하세요.
+- `DATABASE_URL`: Neon이 제공하는 PostgreSQL 연결 문자열
+- `OPERATOR_PIN`: 운영자만 아는 PIN
+
+첫 API 요청 시 `questions`, `event_state`, `audit_logs` 테이블이 자동 생성됩니다. 운영자는 관리자 화면에서 PIN을 입력한 뒤 질문을 승인하고, 행사 화면에서 추첨합니다. 사회자/송출 컴퓨터는 같은 배포 주소의 `/#stage`만 열어 두면 됩니다.
+
+## 동기화 및 중복 방지
+
+- 행사 화면은 서버 상태를 0.5초마다 확인합니다.
+- 추첨 상태는 `IDLE → DRAWING → REVEALED` 순서로 모든 컴퓨터에 공유됩니다.
+- PostgreSQL 행 잠금과 단일 SQL 트랜잭션으로 동시 추첨 및 중복 당첨을 차단합니다.
+- `답변 완료` 또는 `현장 보류` 후에만 다음 추첨이 가능합니다.
