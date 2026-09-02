@@ -8,3 +8,25 @@
 .slogan-wrap>span{text-orientation:upright}
 .brand-logo{display:block;width:145px;height:auto}.brand-dark .brand-logo{filter:grayscale(1) brightness(0) invert(1)}
 @media(max-width:420px){.brand-logo{width:128px}}
+
+/* 질문을 건네는 용기와 참여자의 존재를 함께 환대하는 메시지 */
+.gratitude-message{position:relative;display:flex;gap:13px;margin:28px 0 0;padding:20px 21px;border:1px solid rgba(0,169,189,.2);border-radius:6px;background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(232,250,250,.78));box-shadow:0 12px 34px rgba(0,128,148,.08);overflow:hidden;animation:message-rise .8s .15s both ease-out}
+.gratitude-message:after{content:'';position:absolute;width:110px;height:110px;right:-48px;top:-55px;border-radius:50%;background:rgba(85,215,226,.18);animation:soft-glow 3.6s infinite ease-in-out}
+.gratitude-message>svg{width:20px;min-width:20px;color:#00a3b8;margin-top:2px;animation:sparkle 2.4s infinite ease-in-out}
+.gratitude-message p{margin:0;position:relative;z-index:1}
+.gratitude-message strong,.gratitude-message span{display:block}
+.gratitude-message strong{font-size:15px;color:#163645;letter-spacing:-.025em;margin-bottom:8px}
+.gratitude-message span{font-size:12px;line-height:1.75;color:#62717e;font-weight:500}
+.question-welcome{position:relative;display:flex;align-items:flex-start;gap:13px;margin:-5px 0 25px;padding:16px 17px;border-radius:5px;background:linear-gradient(100deg,#fff4f5,#f2fcfc);border-left:4px solid var(--red);overflow:hidden;animation:message-rise .75s .35s both ease-out}
+.question-welcome:after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.75) 45%,transparent 65%);transform:translateX(-110%);animation:welcome-shine 4.8s 1.4s infinite}
+.welcome-spark{position:relative;z-index:1;width:31px;height:31px;flex:none;display:grid;place-items:center;border-radius:50%;background:white;color:var(--red);box-shadow:0 4px 14px rgba(237,28,59,.12)}
+.welcome-spark svg{width:15px;animation:sparkle 2.4s .4s infinite ease-in-out}
+.question-welcome p{position:relative;z-index:1;margin:0}
+.question-welcome strong,.question-welcome p>span{display:block}
+.question-welcome strong{font-size:13px;line-height:1.55;color:#263344;letter-spacing:-.025em}
+.question-welcome p>span{font-size:11px;line-height:1.6;color:#788597;margin-top:4px}
+@keyframes message-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes soft-glow{50%{transform:scale(1.18);opacity:.55}}
+@keyframes sparkle{50%{transform:rotate(12deg) scale(1.16);filter:drop-shadow(0 0 5px currentColor)}}
+@keyframes welcome-shine{0%,68%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
+@media(max-width:800px){.gratitude-message{margin-top:24px}.question-welcome{margin-bottom:22px}}
