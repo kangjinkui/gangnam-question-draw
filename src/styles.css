@@ -31,14 +31,19 @@
 @keyframes welcome-shine{0%,68%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
 @media(max-width:800px){.gratitude-message{margin-top:24px}.question-welcome{margin-bottom:22px}}
 
+/* 운영 화면 일괄 선택 */
+.bulk-actions{display:flex;align-items:center;gap:14px;margin:-2px 0 16px;padding:12px 15px;background:#edf9f7;border:1px solid #c8ebe5;border-radius:10px;color:#325f59;font-size:12px}
+.bulk-actions label{display:flex;align-items:center;gap:9px;font-weight:700;cursor:pointer}.bulk-actions input,.question-select input{width:17px;height:17px;accent-color:#00a98f}.bulk-actions>span{margin-left:auto;color:#69837f}.bulk-actions button{display:flex;align-items:center;gap:6px;border:0;border-radius:8px;padding:9px 13px;background:#008e78;color:white;font-weight:700;cursor:pointer}.bulk-actions button:disabled{opacity:.45}.bulk-actions svg{width:15px}.review-card{position:relative;transition:border-color .2s,box-shadow .2s}.review-card.is-selected{border-color:#00a98f;box-shadow:0 0 0 2px rgba(0,169,143,.1)}.question-select{position:absolute;right:20px;top:18px;display:flex;align-items:center;gap:7px;color:#688078;font-size:11px;cursor:pointer}.question-select span{font-weight:600}
+
 /* 행사 화면: 소통 토크 메시지와 구정 슬로건 */
 .stage header{display:grid;grid-template-columns:1fr auto 1fr}
 .stage-header-right{justify-self:end;display:flex;align-items:center;gap:24px}
 .stage-header-right>a{color:#8291aa;text-decoration:none;font-size:11px;white-space:nowrap}
 .stage-slogan-image{display:block;width:118px;height:auto;padding-right:24px;border-right:1px solid rgba(255,255,255,.12);animation:message-rise .7s both ease-out}
+.sound-toggle{display:flex;align-items:center;gap:5px;padding:6px 9px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.04);color:#8796b2;font-size:10px;cursor:pointer;white-space:nowrap}.sound-toggle svg{width:13px}.sound-toggle.is-on{color:#61e3bc;border-color:rgba(97,227,188,.3);background:rgba(97,227,188,.08)}
 .talk-kicker{position:relative;width:max-content;margin-left:auto;margin-right:auto;padding:10px 18px;font-size:clamp(15px,1.25vw,20px);letter-spacing:.06em;overflow:hidden;animation:talk-arrive .8s both cubic-bezier(.2,.8,.2,1)}
 .talk-kicker:after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 25%,rgba(97,227,188,.2) 48%,transparent 70%);transform:translateX(-120%);animation:talk-shine 3.8s .8s infinite}
 .talk-kicker svg{animation:sparkle 2s infinite ease-in-out}
 @keyframes talk-arrive{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes talk-shine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
-@media(max-width:800px){.stage header{grid-template-columns:1fr auto}.stage-header-right{gap:12px}.stage-slogan-image{width:82px;padding-right:12px}.stage-header-right>a{font-size:0}.stage-header-right>a:after{content:'운영';font-size:10px}.talk-kicker{font-size:13px;padding:8px 10px}}
+@media(max-width:800px){.stage header{grid-template-columns:1fr auto}.stage-header-right{gap:8px}.stage-slogan-image{width:82px;padding-right:10px}.stage-header-right>a{font-size:0}.stage-header-right>a:after{content:'운영';font-size:10px}.sound-toggle{font-size:0;padding:6px}.sound-toggle svg{width:14px}.talk-kicker{font-size:13px;padding:8px 10px}.bulk-actions{flex-wrap:wrap}.bulk-actions>span{margin-left:0}.bulk-actions button{margin-left:auto}.question-select span{display:none}}

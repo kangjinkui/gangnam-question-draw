@@ -107,6 +107,15 @@ async function handle(action,payload,sql) {
     await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('MODERATE',${id},${JSON.stringify({status:payload.status})}::jsonb)`;
     return {id:payload.id,status:payload.status};
   }
+  if(action==='approveBatch') {
+    if(!Array.isArray(payload.ids)||!payload.ids.length||payload.ids.length>500) throw new Error('일괄 승인할 질문을 선택해 주세요.');
+    const ids=[...new Set(payload.ids.map(numericId))];
+    const rows=await sql`UPDATE questions SET status='APPROVED',reviewer='operator',reviewed_at=now()
+      WHERE id IN (SELECT value::bigint FROM jsonb_array_elements_text(${JSON.stringify(ids)}::jsonb))
+      AND status='SUBMITTED' AND draw_order IS NULL RETURNING id`;
+    await sql`INSERT INTO audit_logs(action,detail) VALUES ('APPROVE_BATCH',${JSON.stringify({requested:ids.length,approved:rows.length,ids:rows.map(row=>row.id)})}::jsonb)`;
+    return {requested:ids.length,approved:rows.length};
+  }
   if(action==='draw') {
     const rows=await sql`WITH locked_state AS (SELECT singleton FROM event_state WHERE singleton=TRUE AND screen_state='IDLE' FOR UPDATE),
       candidate AS (SELECT id FROM questions WHERE status='APPROVED' AND draw_order IS NULL ORDER BY random() LIMIT 1 FOR UPDATE SKIP LOCKED),
