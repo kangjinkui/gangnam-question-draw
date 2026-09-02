@@ -128,6 +128,19 @@ async function handle(action,payload,sql) {
     await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('DELETE',${id},${JSON.stringify({text:rows[0].text})}::jsonb)`;
     return {id:payload.id};
   }
+  if(action==='deleteQuestions') {
+    if(!Array.isArray(payload.ids)||!payload.ids.length||payload.ids.length>500) throw new Error('삭제할 질문을 선택해 주세요.');
+    const ids=[...new Set(payload.ids.map(numericId))];
+    const rows=await sql`WITH targets AS (
+      SELECT value::bigint AS id FROM jsonb_array_elements_text(${JSON.stringify(ids)}::jsonb)
+    ), cleared AS (
+      UPDATE event_state SET screen_state='IDLE',current_question_id=NULL,reveal_at=NULL,updated_at=now()
+      WHERE singleton=TRUE AND current_question_id IN (SELECT id FROM targets) RETURNING singleton
+    )
+    DELETE FROM questions WHERE id IN (SELECT id FROM targets) RETURNING id`;
+    await sql`INSERT INTO audit_logs(action,detail) VALUES ('DELETE_BATCH',${JSON.stringify({requested:ids.length,deleted:rows.length,ids:rows.map(row=>row.id)})}::jsonb)`;
+    return {requested:ids.length,deleted:rows.length};
+  }
   if(action==='approveBatch') {
     if(!Array.isArray(payload.ids)||!payload.ids.length||payload.ids.length>500) throw new Error('일괄 승인할 질문을 선택해 주세요.');
     const ids=[...new Set(payload.ids.map(numericId))];

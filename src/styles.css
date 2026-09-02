@@ -34,6 +34,7 @@
 /* 운영 화면 일괄 선택 */
 .bulk-actions{display:flex;align-items:center;gap:14px;margin:-2px 0 16px;padding:12px 15px;background:#edf9f7;border:1px solid #c8ebe5;border-radius:10px;color:#325f59;font-size:12px}
 .bulk-actions label{display:flex;align-items:center;gap:9px;font-weight:700;cursor:pointer}.bulk-actions input,.question-select input{width:17px;height:17px;accent-color:#00a98f}.bulk-actions>span{margin-left:auto;color:#69837f}.bulk-actions button{display:flex;align-items:center;gap:6px;border:0;border-radius:8px;padding:9px 13px;background:#008e78;color:white;font-weight:700;cursor:pointer}.bulk-actions button:disabled{opacity:.45}.bulk-actions svg{width:15px}.review-card{position:relative;transition:border-color .2s,box-shadow .2s}.review-card.is-selected{border-color:#00a98f;box-shadow:0 0 0 2px rgba(0,169,143,.1)}.question-select{position:absolute;right:20px;top:18px;display:flex;align-items:center;gap:7px;color:#688078;font-size:11px;cursor:pointer}.question-select span{font-weight:600}
+.bulk-actions button.danger{background:#c54444}
 
 /* 행사 화면: 소통 토크 메시지와 구정 슬로건 */
 .stage header{display:grid;grid-template-columns:1fr auto 1fr}
