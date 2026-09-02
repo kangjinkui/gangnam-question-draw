@@ -107,6 +107,21 @@ async function handle(action,payload,sql) {
     await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('MODERATE',${id},${JSON.stringify({status:payload.status})}::jsonb)`;
     return {id:payload.id,status:payload.status};
   }
+  if(action==='updateQuestion') {
+    const id=numericId(payload.id),text=String(payload.text||'').trim();
+    if(text.length<10||text.length>100) throw new Error('질문은 10자 이상 100자 이하로 입력해 주세요.');
+    const rows=await sql`UPDATE questions SET text=${text},display_text=${text} WHERE id=${id} AND draw_order IS NULL RETURNING id`;
+    if(!rows.length) throw new Error('질문을 찾을 수 없거나 이미 추첨되어 수정할 수 없습니다.');
+    await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('UPDATE',${id},${JSON.stringify({text})}::jsonb)`;
+    return {id:payload.id,text,displayText:text};
+  }
+  if(action==='deleteQuestion') {
+    const id=numericId(payload.id);
+    const rows=await sql`DELETE FROM questions WHERE id=${id} AND draw_order IS NULL RETURNING id,text`;
+    if(!rows.length) throw new Error('질문을 찾을 수 없거나 이미 추첨되어 삭제할 수 없습니다.');
+    await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('DELETE',${id},${JSON.stringify({text:rows[0].text})}::jsonb)`;
+    return {id:payload.id};
+  }
   if(action==='approveBatch') {
     if(!Array.isArray(payload.ids)||!payload.ids.length||payload.ids.length>500) throw new Error('일괄 승인할 질문을 선택해 주세요.');
     const ids=[...new Set(payload.ids.map(numericId))];
