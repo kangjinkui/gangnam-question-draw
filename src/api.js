@@ -10,6 +10,7 @@ async function callApi(action, payload = {}) {
 export function submitQuestion(payload) { return callApi('submit', payload); }
 export function listQuestions(operatorPin) { return callApi('list', { operatorPin }); }
 export function moderateQuestion(operatorPin, id, status) { return callApi('moderate', { operatorPin, id, status }); }
+export function revertDrawnQuestion(operatorPin, id) { return callApi('revertDraw', { operatorPin, id }); }
 export function updateQuestion(operatorPin, id, text) { return callApi('updateQuestion', { operatorPin, id, text }); }
 export function deleteQuestion(operatorPin, id) { return callApi('deleteQuestion', { operatorPin, id }); }
 export function deleteQuestions(operatorPin, ids) { return callApi('deleteQuestions', { operatorPin, ids }); }

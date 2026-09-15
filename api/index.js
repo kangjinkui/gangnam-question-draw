@@ -107,6 +107,20 @@ async function handle(action,payload,sql) {
     await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('MODERATE',${id},${JSON.stringify({status:payload.status})}::jsonb)`;
     return {id:payload.id,status:payload.status};
   }
+  if(action==='revertDraw') {
+    const id=numericId(payload.id);
+    const rows=await sql`WITH cleared AS (
+      UPDATE event_state SET screen_state='IDLE',current_question_id=NULL,reveal_at=NULL,updated_at=now()
+      WHERE singleton=TRUE AND current_question_id=${id} RETURNING singleton
+    )
+    UPDATE questions SET status='APPROVED',draw_order=NULL,drawn_at=NULL,answer_status=NULL,reviewer='operator',reviewed_at=now()
+      WHERE id=${id} AND status='DRAWN'
+      AND (NOT EXISTS (SELECT 1 FROM event_state WHERE current_question_id=${id}) OR EXISTS (SELECT 1 FROM cleared))
+      RETURNING id`;
+    if(!rows.length) throw new Error('되돌릴 추첨 완료 질문을 찾을 수 없습니다.');
+    await sql`INSERT INTO audit_logs(action,question_id,detail) VALUES ('REVERT_DRAW',${id},'{}'::jsonb)`;
+    return {id:payload.id,status:'APPROVED'};
+  }
   if(action==='updateQuestion') {
     const id=numericId(payload.id),text=String(payload.text||'').trim();
     if(text.length<10||text.length>100) throw new Error('질문은 10자 이상 100자 이하로 입력해 주세요.');
